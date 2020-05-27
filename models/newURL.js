@@ -13,4 +13,5 @@ const switchURLSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('switchURL', switchURLSchema)
+module.exports = mongoose.model('SwitchURL', switchURLSchema)
+ 
