@@ -34,3 +34,4 @@ npm run dev
 - Mongodb
 - Mongoose
 - clipboard.js
+- animate.js
