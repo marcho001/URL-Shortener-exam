@@ -49,6 +49,7 @@ app.post('/', (req, res) => {
       let isNew = true
       res.render('newURL', { baseURL, originURL, isNew})
     })
+    //若需要防止有重覆的網址組合出現
     .catch((err) => {
       SwitchURL.find({ origin : originURL})
       .lean()
