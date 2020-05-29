@@ -56,7 +56,7 @@ app.post('/', (req, res) => {
       .then((url) => {
         let isExist = true
         let existOriginURL = url[0].origin
-
+//可以輸入完整網址或是直接從www 開始
         if (!existOriginURL.includes('http://')) {
           existOriginURL = "http://" + existOriginURL
       }

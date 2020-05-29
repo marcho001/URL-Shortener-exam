@@ -9,10 +9,24 @@
   Your URL is exist! Please use this link:
 </h1>
 {{/if}}
-<a class="mt-3 h2" href="{{ originURL }}">{{ baseURL }}</a>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
+{{!-- <script>
+  const clipboard = new Clipboard('#copy')
+
+    clipboard.on('success', function (e) {
+      console.log(e);
+    });
+
+    clipboard.on('error', function (e) {
+      console.log(e);
+    });
+</script>  --}}
+
+<a id="copyTarget" class="mt-3 h2" href="{{ originURL }}">{{ baseURL }}</a>
 <div class="button d-flex mt-3">
-<button type="button" class="mr-3 btn btn-primary">COPY</button>
+<button type="button" id="copy" class="copy mr-3 btn btn-primary" data-clipboard-text="{{{ baseURL }}}">COPY</button>
 <a href="/" type="button" class="btn btn-success">Back</a>
 
 </div>
