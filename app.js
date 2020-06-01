@@ -39,8 +39,8 @@ app.post('/', (req, res) => {
     return res.render('index', { isEmpty })
   }
   //可以輸入完整網址或是直接從www 開始
-  if (!originURL.includes('http://')) {
-    originURL = "http://" + originURL
+  if (!originURL.includes('http://') && !originURL.includes('https://')) {
+    originURL = "https://" + originURL
   }
 
   let code = randomCode()
@@ -59,15 +59,9 @@ app.post('/', (req, res) => {
       .lean()
       .then((url) => {
         let isExist = true
-        let existOriginURL = url[0].origin
-
-        if (!existOriginURL.includes('http://')) {
-          existOriginURL = "http://" + existOriginURL
-        }
-
         res.render('newURL', { 
           baseURL : url[0].newURL, 
-          originURL : existOriginURL,
+          originURL: url[0].origin,
           isExist
         })
       })
