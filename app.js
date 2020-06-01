@@ -61,6 +61,10 @@ app.post('/', (req, res) => {
         let isExist = true
         let existOriginURL = url[0].origin
 
+        if (!existOriginURL.includes('http://')) {
+          existOriginURL = "http://" + existOriginURL
+        }
+
         res.render('newURL', { 
           baseURL : url[0].newURL, 
           originURL : existOriginURL,
