@@ -31,12 +31,16 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   let baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
-  const originURL = req.body.originURL
+  let originURL = req.body.originURL
 
 //若使用者沒有輸入內容，就按下了送出鈕，需要防止表單送出並提示使用者
   if (originURL === '') {
     let isEmpty = true
     return res.render('index', { isEmpty })
+  }
+  //可以輸入完整網址或是直接從www 開始
+  if (!originURL.includes('http://')) {
+    originURL = "http://" + originURL
   }
 
   let code = randomCode()
@@ -47,19 +51,15 @@ app.post('/', (req, res) => {
   })
     .then((newURL) => {
       let isNew = true
-      res.render('newURL', { baseURL, originURL, isNew})
+      res.render('newURL', { baseURL, originURL, isNew })
     })
     //若需要防止有重覆的網址組合出現
     .catch((err) => {
-      SwitchURL.find({ origin : originURL})
+      SwitchURL.find({ origin : originURL })
       .lean()
       .then((url) => {
         let isExist = true
         let existOriginURL = url[0].origin
-//可以輸入完整網址或是直接從www 開始
-        if (!existOriginURL.includes('http://')) {
-          existOriginURL = "http://" + existOriginURL
-      }
 
         res.render('newURL', { 
           baseURL : url[0].newURL, 
