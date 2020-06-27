@@ -35,3 +35,5 @@ npm run dev
 - Mongoose
 - clipboard.js
 - animate.js
+- axios
+- connect-flash
