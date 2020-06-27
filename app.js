@@ -9,8 +9,7 @@ const randomCode = require('./models/randomCode')
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/newURL'
 const seesion = require('express-session')
 const flash = require('connect-flash')
-const urlExist = require('url-exists')
-
+const axios = require('axios')
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection
@@ -63,8 +62,13 @@ app.post('/', (req, res) => {
   return SwitchURL.findOne({ newURL: originURL })
     .lean()
     .then(url => {
-     
       if (!url) {
+        // axios.get(originURL)
+        //   .catch(err => {
+        //     req.flash('warning_msg', '網址好像怪怪的...')
+        //     res.redirect('/')
+        //   })
+
         let code = randomCode()
         baseURL += code
         return SwitchURL.create({
@@ -94,7 +98,7 @@ app.post('/', (req, res) => {
       return res.redirect('/')
     })
     .catch(err => console.log(err))
-
+   
 })
 
 app.listen(PORT, () => {
