@@ -1,6 +1,7 @@
 {{#if isEmpty}}
 <h1 class="text-danger mt-4 animate__animated animate__shakeX">Please enter a URI</h1>
 {{/if}}
+{{> message}}
 <form class="d-flex flex-column mt-5" action="/" method="post">
   <input type="text" name="originURL" class="rounded" style="outline: none; width: 600px; height: 50px;">
   <div class="d-flex justify-content-center">
