@@ -63,11 +63,11 @@ app.post('/', (req, res) => {
     .lean()
     .then(url => {
       if (!url) {
-        axios.get(originURL)
-          .catch(err => {
-            req.flash('warning_msg', '網址好像怪怪的...')
-            res.redirect('/')
-          })
+        // axios.get(originURL)
+        //   .catch(err => {
+        //     req.flash('warning_msg', '網址好像怪怪的...')
+        //     return res.redirect('/') 
+        //   }) 
 
         let code = randomCode()
         baseURL += code
