@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  let baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
+  let baseURL = 'https://rocky-chamber-61733.herokuapp.com/' 
   let originURL = req.body.originURL
 
   //若使用者沒有輸入內容，就按下了送出鈕，需要防止表單送出並提示使用者
@@ -63,12 +63,11 @@ app.post('/', (req, res) => {
     .lean()
     .then(url => {
       if (!url) {
-        
-        // axios.get(originURL)
-        //   .catch(err => {
-        //     req.flash('warning_msg', '網址好像怪怪的...')
-        //     res.redirect('/')
-        //   })
+        axios.get(originURL)
+          .catch(err => {
+            req.flash('warning_msg', '網址好像怪怪的...')
+            res.redirect('/')
+          })
 
         let code = randomCode()
         baseURL += code
@@ -95,8 +94,12 @@ app.post('/', (req, res) => {
               .catch(err => console.log('error'))
           })
       }
-      req.flash('warning_msg', '此網址已經轉換過囉！')
-      return res.redirect('/')
+      let isExist = true
+      return res.render('newURL', {
+        baseURL: url.newURL,
+        originURL: url.origin,
+        isExist
+      })
     })
     .catch(err => console.log(err))
    
