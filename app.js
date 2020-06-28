@@ -9,7 +9,7 @@ const randomCode = require('./models/randomCode')
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/newURL'
 const seesion = require('express-session')
 const flash = require('connect-flash')
-const axios = require('axios')
+const urlExist = require('url-exist')
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection
@@ -43,66 +43,64 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-app.post('/', (req, res) => {
-  let baseURL = 'https://rocky-chamber-61733.herokuapp.com/' 
+app.post('/', async (req, res) => {
+  let baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
   let originURL = req.body.originURL
-
+  // check if empty or not
+  // check if start from http://
+  // check if the url is short-url
   //若使用者沒有輸入內容，就按下了送出鈕，需要防止表單送出並提示使用者
   if (originURL === '') {
-    let isEmpty = true
-    req.flash('warning_msg', 'Please enter a URI')
+    req.flash('warning_msg', '請輸入要轉換的網址')
     return res.redirect('/')
   }
-
   //可以輸入完整網址或是直接從www 開始
   if (!originURL.includes('http://') && !originURL.includes('https://')) {
     originURL = "https://" + originURL
   }
 
-  return SwitchURL.findOne({ newURL: originURL })
-    .lean()
-    .then(url => {
-      if (!url) {
-        // axios.get(originURL)
-        //   .catch(err => {
-        //     req.flash('warning_msg', '網址好像怪怪的...')
-        //     return res.redirect('/') 
-        //   }) 
+  try {
+    const isSwitchUrl = await SwitchURL.findOne({ newURL: originURL }).lean()
+    if (isSwitchUrl) {
+      let hasSwitch = true
+      return res.render('newURL', {
+        baseURL: isSwitchUrl.newURL,
+        originURL: isSwitchUrl.origin,
+        hasSwitch
+      })
+    }
 
-        let code = randomCode()
-        baseURL += code
-        return SwitchURL.create({
-          origin: originURL,
-          newURL: baseURL
-        })
-          .then((newURL) => {
-            let isNew = true
-            res.render('newURL', { baseURL, originURL, isNew })
-          })
-          //若需要防止有重覆的網址組合出現
-          .catch((err) => {
-            SwitchURL.find({ origin: originURL })
-              .lean()
-              .then((url) => {
-                let isExist = true
-                res.render('newURL', {
-                  baseURL: url[0].newURL,
-                  originURL: url[0].origin,
-                  isExist
-                })
-              })
-              .catch(err => console.log('error'))
-          })
-      }
+    const exist = await urlExist(originURL)
+    if (!exist) {
+      req.flash('warning_msg', '網址怪怪的唷..')
+      return res.redirect('/')
+    }
+
+
+    const hasSwitch = await SwitchURL.findOne({ origin: originURL }).lean()
+    if (hasSwitch) {
       let isExist = true
       return res.render('newURL', {
-        baseURL: url.newURL,
-        originURL: url.origin,
+        baseURL: hasSwitch.newURL,
+        originURL: hasSwitch.origin,
         isExist
       })
+    }
+
+    let code = randomCode()
+    baseURL += code
+
+    const newUrl = await SwitchURL.create({
+      origin: originURL,
+      newURL: baseURL
     })
-    .catch(err => console.log(err))
-   
+    let isNew = true
+    res.render('newURL', { baseURL, originURL, isNew })
+
+  } catch (err) {
+    console.log(err)
+  }
+
 })
 
 app.listen(PORT, () => {

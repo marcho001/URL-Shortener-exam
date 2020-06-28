@@ -9,6 +9,11 @@
   Your URL is exist! Please use this link:
 </h1>
 {{/if}}
+{{#if hasSwitch}}
+<h1 class="display-5 mt-4 text-danger animate__animated animate__shakeX">
+  這個網址已經很短了！
+</h1>
+{{/if}}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
