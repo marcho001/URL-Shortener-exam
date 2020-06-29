@@ -69,7 +69,7 @@ app.post('/', async (req, res) => {
         hasSwitch
       })
     }
-
+ 
     const exist = await urlExist(originURL)
     if (!exist) {
       req.flash('warning_msg', '網址怪怪的唷..')
@@ -99,6 +99,18 @@ app.post('/', async (req, res) => {
 
   } catch (err) {
     console.log(err)
+  }
+
+})
+
+app.get('/:id', async (req, res) => {
+  const { id } = req.params
+  const baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
+  baseURL += id
+
+  const hasSwitch = await SwitchURL.findOne({ newURL: baseURL }).lean()
+  if (hasSwitch) {
+    res.redirect(`${hasSwitch.originURL}`)
   }
 
 })
