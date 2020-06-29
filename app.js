@@ -108,11 +108,15 @@ app.get('/:id', async (req, res) => {
   
   let baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
   baseURL += id
+  
+  try {
+    const hasSwitch = await SwitchURL.findOne({ newURL: baseURL }).lean()
+    if (hasSwitch) {
+      res.redirect('/huhu') 
+    }
 
-  const hasSwitch = await SwitchURL.findOne({ newURL: baseURL }).lean()
-  if (hasSwitch) {
-    console.log(hasSwitch)
-    res.redirect(`${hasSwitch.originURL}`) 
+  } catch(err) {
+    console.log(err)
   }
  
 })
