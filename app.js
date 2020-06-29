@@ -105,14 +105,16 @@ app.post('/', async (req, res) => {
 
 app.get('/:id', async (req, res) => {
   const { id } = req.params
-  const baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
+  
+  let baseURL = 'https://rocky-chamber-61733.herokuapp.com/'
   baseURL += id
 
   const hasSwitch = await SwitchURL.findOne({ newURL: baseURL }).lean()
   if (hasSwitch) {
-    res.redirect(`${hasSwitch.originURL}`)
+    console.log(hasSwitch)
+    res.redirect(`${hasSwitch.originURL}`) 
   }
-
+ 
 })
 
 app.listen(PORT, () => {
