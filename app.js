@@ -112,7 +112,7 @@ app.get('/:id', async (req, res) => {
   try {
     const hasSwitch = await SwitchURL.findOne({ newURL: baseURL }).lean()
     if (hasSwitch) {
-      res.redirect('/huhu') 
+      res.redirect(`${hasSwitch.origin}`) 
     }
 
   } catch(err) {
